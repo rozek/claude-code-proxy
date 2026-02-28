@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(node dist/claude-code-proxy.js:*)",
+      "Bash(echo:*)",
+      "Bash(node -e:*)",
+      "Bash(claude auth status:*)"
+    ]
+  }
+}
