@@ -367,3 +367,9 @@ console.log(r2.choices[0].message.content);
 | `logprobs`     | ❌ not supported        | ❌ not supported   |
 | `functions` / `tools` | ❌ not supported | ❌ not supported  |
 | Token counts in `usage` | ❌ always `-1` | ❌ always `-1`  |
+
+---
+
+## License ##
+
+[MIT License](LICENSE.md)
