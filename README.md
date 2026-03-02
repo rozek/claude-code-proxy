@@ -124,7 +124,7 @@ the Claude Code CLI.
 > ⚠️ **Note on image and document blocks:** The proxy forwards these blocks in
 > the correct NDJSON format to the Claude Code CLI. Whether the CLI actually
 > passes multimodal content through to the Anthropic API is **not officially
-> documented** and may vary by CLI version. Plain text blocks work reliably.
+> documented** and may vary by CLI version (**please test before use - examples can be found below**). Plain text blocks work reliably.
 > Images and PDFs should be tested — alternatively, file content can be
 > embedded as text in the prompt (e.g. a base64 string with an interpretation
 > instruction).
