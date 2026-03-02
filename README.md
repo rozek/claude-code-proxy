@@ -31,16 +31,20 @@ npm run build && npm start
 # Custom port (argument takes precedence over env var)
 npm run dev -- --port 8080
 PORT=8080 npm run dev
+
+# Custom timeout (default: 300 s)
+npm run dev -- --timeout 600
 ```
 
 ## Command-Line Options
 
 ```
-Usage: claude-code-proxy [--port <n>] [--help]
+Usage: claude-code-proxy [--port <n>] [--timeout <n>] [--help]
 
 Options:
-  --port <n>   port to listen on (overrides $PORT env var, default: 3000)
-  --help       show this help
+  --port <n>      port to listen on (overrides $PORT env var, default: 3000)
+  --timeout <n>   Claude Code CLI timeout in seconds (default: 300)
+  --help          show this help
 
 Endpoints:
   POST /v1/chat/completions   chat completion (streaming, session_id)
@@ -51,6 +55,12 @@ Endpoints:
 
 **Port resolution order:** `--port` argument → `$PORT` environment variable →
 default `3000`.
+
+**Timeout:** applies to every individual Claude Code CLI invocation. If the CLI
+does not respond within the given number of seconds, the process is killed and
+the request fails with an error. Increase this value for long-running tasks.
+
+---
 
 ## Endpoints
 
@@ -172,6 +182,8 @@ data: {"id":"chatcmpl-...","object":"chat.completion.chunk","created":1700000000
 data: [DONE]
 ```
 
+---
+
 ### `POST /v1/completions`
 
 Simple text completion. The `prompt` string is treated as a single user message.
@@ -206,6 +218,8 @@ Simple text completion. The `prompt` string is treated as a single user message.
 }
 ```
 
+---
+
 ### `GET /v1/models`
 
 Returns the list of available (proxy) models.
@@ -222,9 +236,13 @@ Returns the list of available (proxy) models.
 }
 ```
 
+---
+
 ### `GET /health`
 
 Health check. Returns `{"status":"ok"}` with HTTP 200.
+
+---
 
 ## How It Works
 
@@ -278,6 +296,8 @@ to continue the conversation at CLI level:
 > **Note:** Because OpenAI-compatible clients typically send the full
 > `messages[]` history anyway, the proxy works correctly **without** `session_id`
 > too — the entire history is passed as NDJSON.
+
+---
 
 ## Examples
 
@@ -335,6 +355,8 @@ const r2 = await (client.chat.completions as any).create({
 console.log(r2.choices[0].message.content);
 ```
 
+---
+
 ## Parameter Support Overview
 
 | Parameter      | `/v1/chat/completions` | `/v1/completions` |
@@ -353,6 +375,8 @@ console.log(r2.choices[0].message.content);
 | `logprobs`     | ❌ not supported        | ❌ not supported   |
 | `functions` / `tools` | ❌ not supported | ❌ not supported  |
 | Token counts in `usage` | ❌ always `-1` | ❌ always `-1`  |
+
+---
 
 ## License ##
 

@@ -16,11 +16,12 @@
 
   if (CLIArgs.includes("--help")) {
     console.log(`
-Usage: claude-code-proxy [--port <n>] [--help]
+Usage: claude-code-proxy [--port <n>] [--timeout <n>] [--help]
 
 Options:
-  --port <n>   port to listen on (overrides $PORT env var, default: 3000)
-  --help       show this help
+  --port <n>      port to listen on (overrides $PORT env var, default: 3000)
+  --timeout <n>   Claude Code CLI timeout in seconds (default: 300)
+  --help          show this help
 
 Endpoints:
   POST /v1/chat/completions   chat completion (streaming, session_id)
@@ -30,6 +31,8 @@ Endpoints:
     `.trim())
     process.exit(0)
   }
+
+/**** fetch port argument ****/
 
   const PortFlagIndex = CLIArgs.indexOf("--port")
   const Port:number = (() => {
@@ -47,6 +50,26 @@ Endpoints:
       process.exit(1)
     }
     return Value
+  })()
+
+/**** fetch timeout argument ****/
+
+  const TimeoutFlagIndex = CLIArgs.indexOf("--timeout")
+  const TimeoutMs:number = (() => {
+    if (TimeoutFlagIndex < 0) { return 300_000 }
+
+    const RawValue = CLIArgs.at(TimeoutFlagIndex + 1)
+    const Value    = Number(RawValue)
+
+    if ((RawValue == null) || (! Number.isInteger(Value)) || (Value < 1)) {
+      console.error(
+        (RawValue == null)
+          ? "--timeout requires a numeric argument"
+          : `Invalid --timeout value: "${RawValue}" (must be a positive integer)`
+      )
+      process.exit(1)
+    }
+    return Value * 1000
   })()
 
 //----------------------------------------------------------------------------//
@@ -118,7 +141,7 @@ Endpoints:
     SessionId:string
   }
 
-/**** internal looser type for parsing Claude's stream-json output ****/
+/**** internal type for parsing Claude's stream-json output ****/
 
   type RawContentBlock = { type:string; text?:string }
   type RawContent      = string | RawContentBlock[]
@@ -218,8 +241,8 @@ Endpoints:
     Process.stdin.write(NDJSON, "utf8"); Process.stdin.end()
 
     const Timer = setTimeout(() => {
-      Process.kill("SIGTERM"); reject(new Error("claude CLI timed out after 120 s"))
-    }, 120_000)
+      Process.kill("SIGTERM"); reject(new Error(`claude CLI timed out after ${TimeoutMs/1000} s`))
+    }, TimeoutMs)
 
     Process.on("close", (Code) => {
       clearTimeout(Timer)
@@ -281,8 +304,8 @@ Endpoints:
     Process.stdin.write(NDJSON, "utf8"); Process.stdin.end()
 
     const Timer = setTimeout(() => {
-      Process.kill("SIGTERM"); reject(new Error("claude CLI timed out after 120 s"))
-    }, 120_000)
+      Process.kill("SIGTERM"); reject(new Error(`claude CLI timed out after ${TimeoutMs/1000} s`))
+    }, TimeoutMs)
 
     Process.on("close", (Code) => {
       clearTimeout(Timer)
