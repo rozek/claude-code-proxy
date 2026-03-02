@@ -324,6 +324,76 @@ curl http://localhost:3000/v1/chat/completions \
   -d '{ "stream": true, "messages": [{ "role": "user", "content": "Explain quantum computing." }] }'
 ```
 
+### Image Input (curl)
+
+```bash
+# Encode the image and send it together with a text prompt.
+# Adjust media_type to match the actual format:
+#   image/jpeg | image/png | image/gif | image/webp
+IMG=$(base64 < /path/to/image.png | tr -d '\n')
+
+curl http://localhost:3000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg img "$IMG" '{
+        model: "claude-code-proxy",
+        messages: [{
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "could you please describe the following picture"
+            },
+            {
+              type: "image",
+              source: {
+                type:       "base64",
+                media_type: "image/png",
+                data:       $img
+              }
+            }
+          ]
+        }]
+      }')"
+```
+
+> ⚠️ Whether the Claude Code CLI forwards image data to the Anthropic API is
+> not officially documented and may vary by CLI version.
+
+### PDF Input (curl)
+
+```bash
+# Encode the PDF and send it together with a text prompt.
+PDF=$(base64 < /path/to/document.pdf | tr -d '\n')
+
+curl http://localhost:3000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg pdf "$PDF" --arg title "document.pdf" '{
+        model: "claude-code-proxy",
+        messages: [{
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "please summarize the following document"
+            },
+            {
+              type: "document",
+              source: {
+                type:       "base64",
+                media_type: "application/pdf",
+                data:       $pdf
+              },
+              title: $title
+            }
+          ]
+        }]
+      }')"
+```
+
+> ⚠️ Whether the Claude Code CLI forwards PDF data to the Anthropic API is
+> not officially documented and may vary by CLI version.
+> For large PDFs consider increasing `--timeout`.
+
 ### With OpenAI SDK (TypeScript)
 
 ```ts
