@@ -327,6 +327,7 @@ curl http://localhost:3000/v1/chat/completions \
 ### Image Input (curl)
 
 ```bash
+# Requires jq (https://jqlang.org) to safely embed binary data in JSON.
 # Encode the image and send it together with a text prompt.
 # Adjust media_type to match the actual format:
 #   image/jpeg | image/png | image/gif | image/webp
@@ -362,6 +363,7 @@ curl http://localhost:3000/v1/chat/completions \
 ### PDF Input (curl)
 
 ```bash
+# Requires jq (https://jqlang.org) to safely embed binary data in JSON.
 # Encode the PDF and send it together with a text prompt.
 PDF=$(base64 < /path/to/document.pdf | tr -d '\n')
 
