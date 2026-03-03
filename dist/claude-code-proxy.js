@@ -26,7 +26,6 @@ Endpoints:
     `.trim());
     process.exit(0);
 }
-/**** fetch port argument ****/
 const PortFlagIndex = CLIArgs.indexOf("--port");
 const Port = (() => {
     if (PortFlagIndex < 0) {
@@ -42,7 +41,6 @@ const Port = (() => {
     }
     return Value;
 })();
-/**** fetch timeout argument ****/
 const TimeoutFlagIndex = CLIArgs.indexOf("--timeout");
 const TimeoutMs = (() => {
     if (TimeoutFlagIndex < 0) {
