@@ -75,7 +75,7 @@ the Claude Code CLI.
 |--------------|--------------------|----------|--------------|-------------|
 | `messages`   | `Message[]`        | ✅ yes   | ✅ full      | Conversation history (all roles, any length). System messages are passed as `--system-prompt`; user and assistant turns are sent as NDJSON via stdin. |
 | `stream`     | `boolean`          | –        | ✅ full      | If `true`: Server-Sent Events (SSE) in OpenAI chunk format (`data: {...}\n\n`, terminated with `data: [DONE]\n\n`). |
-| `model`      | `string`           | –        | ⚠️ mirrored | Reflected in the response but not forwarded to the CLI. Claude Code uses the model configured in `~/.claude/settings.json`. |
+| `model`      | `string`           | –        | ⚠️ ignored   | Reflected in the response but not forwarded to the CLI. Claude Code uses the model configured in `~/.claude/settings.json`. |
 | `session_id` | `string` (UUID)    | –        | ✅ full      | **Non-standard.** Continues a conversation at CLI level (`--session-id`). If omitted, a new UUID is generated. The UUID used is always returned as `_session_id` in the response. |
 | `max_tokens` | `number`           | –        | ❌ ignored   | The Claude Code CLI offers no corresponding flag. Accepted but ignored. |
 | `temperature`| `number`           | –        | ❌ ignored   | The Claude Code CLI offers no corresponding flag. Accepted but ignored. |
