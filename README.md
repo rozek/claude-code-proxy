@@ -443,7 +443,7 @@ console.log(r2.choices[0].message.content);
 | `messages[].content` as block array (image/PDF) | ⚠️ experimental | – |
 | `prompt`       | –                      | ✅ full            |
 | `stream`       | ✅ full (SSE)           | ✅ full (SSE)      |
-| `model`        | ⚠️ mirrored, CLI ignores it | ⚠️ mirrored   |
+| `model`        | ⚠️ ignored              | ⚠️ ignored   |
 | `session_id`   | ✅ non-standard         | ❌ not available   |
 | `max_tokens`   | ❌ ignored              | ❌ ignored         |
 | `temperature`  | ❌ ignored              | ❌ ignored         |
